@@ -8,12 +8,7 @@
  *  @since   16-10-2018
  *
  ******************************************************************************/
-/**
- * 
- * 
- * 
- * 
- */
+
 // Implementing the Readline module in this application.
 var readline = require('readline');
 
