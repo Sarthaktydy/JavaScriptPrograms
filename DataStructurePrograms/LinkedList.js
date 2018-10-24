@@ -1,20 +1,13 @@
-class Node {
-    constructor(data) {
-        this.data = data;
-        this.next = null;
-    }
-}
-
+var req = require("./Node")
 class LinkedList {
     constructor() {
         this.head = null;
         this.size = 0;
     }
-
     addAppend(data) {
-        var node = new Node(data);
+        var node = new req.Node(data);
         var current;
-        if (head == null) {
+        if (this.head == null) {
             this.head = node;
         } else {
             current = this.head;
@@ -28,7 +21,7 @@ class LinkedList {
     }
 
     addFirst(data) {
-        var node = new Node(data);
+        var node = new req.Node(data);
         if (this.isEmpty()) {
             this.head = node;
             return true;
@@ -50,7 +43,7 @@ class LinkedList {
         if (pos < 0 || pos > this.size) {
             return false;
         }
-        var node = new Node(data);
+        var node = new req.Node(data);
         if (pos == 0) {
             this.addFirst(data);
             return;
@@ -129,9 +122,8 @@ class LinkedList {
 
     pop(pos) {
         if (pos < 0 || pos > this.size) {
-            return false;
+            return -1;
         }
-
         var prev = this.head;
         var curr = prev.next;
         var count = 0;
@@ -140,8 +132,31 @@ class LinkedList {
             curr = curr.next;
             count++;
         }
-        prev.next = node;
-        node.next = curr;
-        this.size++;
+        var data = curr.data;
+        prev.next = curr.next;
+        this.size--;
+        return data;
     }
+
+    show() {
+        var temp = this.head;
+        for (var i = 0; i < this.size; i++) {
+            console.log(temp.data + " ");
+            temp = temp.next;
+        }
+    }
+
 }
+
+function main() {
+    var l = new LinkedList();
+    l.addAppend(20);
+    l.addAppend(30);
+    l.addAppend(10);
+    l.addAppend(50);
+    l.addAppend(60);
+    l.addAppend(20);
+    l.addAppend(120);
+    l.show();
+}
+main();
