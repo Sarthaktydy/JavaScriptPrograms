@@ -212,6 +212,18 @@ class LinkedList {
         }
     }
 
+    getList() {
+        if (this.isEmpty()) {
+            return "";
+        }
+        var temp = this.head;
+        var str = "";
+        for (var i = 0; i < this.size; i++) {
+            str = str + temp.data + " ";
+            temp = temp.next;
+        }
+        return str;
+    }
 }
 
 // function main() {
@@ -230,6 +242,7 @@ class LinkedList {
 //     l.addByOrder(3);
 //     l.show();
 //     //console.log(l.getSize());
+//     console.log(l.getList());
 // }
 // main();
 

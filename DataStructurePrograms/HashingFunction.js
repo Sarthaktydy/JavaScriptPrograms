@@ -11,7 +11,9 @@ var fs = require('fs');
  * and storing it's String value in 'text' variable using 'toString()' function.
  */
 var text = fs.readFileSync('/home/bridgelabz/NishPrograms/TextFilesForTest/NumbersInput.txt').toString();
+
 var str = text.split(' ');
+
 var arr = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
 for (var i = 0; i < str.length; i++) {
@@ -38,38 +40,27 @@ function search(key) {
     if (arr[k].search(key)) {
         console.log("\n" + key + " is found and removed from the list!!\n");
         arr[k].remove(key);
-        arr[k].show();
     } else {
         console.log("\n" + key + " is not found, so added to the list\n");
         arr[k].addByOrder(key);
-        arr[k].show();
     }
 }
 
 search(10);
 
-// if (ll.search(key)) {
-//     console.log("\n" + key + " is found and removed from the list!!\n");
-//     ll.remove(key);
-//     ll.show();
-// } else {
-//     console.log("\n" + key + " is not found, so added to the list\n");
-//     ll.addByOrder(key);
-//     ll.show();
-// }
-// console.log();
-// str = "";
-// var size = ll.getSize();
-// for (var i = 0; i < size; i++) {
-//     if (i < size - 1) {
-//         str = str.concat(ll.popAtPos(0)).concat(" ");
-//     }
-//     if (i == size - 1) {
-//         str = str.concat(ll.popAtPos(0))
-//     }
-// }
-// console.log(str);
 
-// fs.writeFileSync('/home/bridgelabz/NishPrograms/TextFilesForTest/NumbersInput.txt', str);
+str = "";
 
-// rl.close();
+for (var i = 0; i < arr.length; i++) {
+    if (arr[i] != 0) {
+        str = str + i + " | " + arr[i].getList() + "|\n";
+    } else {
+        str = str + i + " |~~~|\n";
+    }
+}
+
+console.log(str);
+
+fs.writeFileSync('/home/bridgelabz/NishPrograms/TextFilesForTest/HashingFunction.txt', str);
+
+rl.close();
