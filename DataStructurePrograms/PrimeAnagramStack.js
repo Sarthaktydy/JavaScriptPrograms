@@ -1,3 +1,5 @@
+var s = require("./Stack");
+
 /**
  * Function to get all primes numbers from '0' to 'n'.
  * 
@@ -93,31 +95,25 @@ function checkAnagram(num1, num2) {
     }
 }
 
-var arr = [new Array(), new Array()];
+var st = new s.Stack();
 
-function getArray() {
+function getStack() {
     var prime = getPrimes(1000);
+    var count = 0;
     for (var i = 0; i < prime.length - 1; i++) {
         for (var j = i + 1; j < prime.length; j++) {
             if (checkAnagram(prime[i], prime[j])) {
-                arr[0].push("{" + prime[i] + "," + prime[j] + "}");
+                st.push("{" + prime[i] + "," + prime[j] + "}");
+                count++;
             }
         }
     }
 
-    var bool = true;
-    for (var i = 0; i < prime.length - 1; i++) {
-        for (var j = i + 1; j < prime.length; j++) {
-            if (checkAnagram(prime[i], prime[j])) {
-                bool = false;
-            }
-        }
-        if (bool) {
-            arr[1].push(prime[i]);
-        }
-        bool = true;
+    var size = st.size;
+    for (var i = 0; i < size; i++) {
+        console.log(st.pop());
+
     }
-    console.log(arr);
 }
 
-getArray();
+getStack();

@@ -1,3 +1,5 @@
+var q = require("./Queue");
+
 /**
  * Function to get all primes numbers from '0' to 'n'.
  * 
@@ -93,31 +95,24 @@ function checkAnagram(num1, num2) {
     }
 }
 
-var arr = [new Array(), new Array()];
+var qu = new q.Queue();
 
-function getArray() {
+function getQueue() {
     var prime = getPrimes(1000);
+    var count = 0;
     for (var i = 0; i < prime.length - 1; i++) {
         for (var j = i + 1; j < prime.length; j++) {
             if (checkAnagram(prime[i], prime[j])) {
-                arr[0].push("{" + prime[i] + "," + prime[j] + "}");
+                qu.enqueue("{" + prime[i] + "," + prime[j] + "}");
+                count++;
             }
         }
     }
 
-    var bool = true;
-    for (var i = 0; i < prime.length - 1; i++) {
-        for (var j = i + 1; j < prime.length; j++) {
-            if (checkAnagram(prime[i], prime[j])) {
-                bool = false;
-            }
-        }
-        if (bool) {
-            arr[1].push(prime[i]);
-        }
-        bool = true;
+    var size = qu.size;
+    for (var i = 0; i < size; i++) {
+        console.log(qu.dequeue());
     }
-    console.log(arr);
 }
 
-getArray();
+getQueue();

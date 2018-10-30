@@ -1,6 +1,5 @@
+var q = require("./Queue");
 var d = require("/home/bridgelabz/NishPrograms/JavaScriptPrograms/AlgorithmPrograms/DayOfWeek.js");
-
-// Implementing the Readline module in this application.
 var readline = require('readline');
 
 // Creating an Interface object of Readline Module by passing 'stdin' & 'stdout' as parameters.
@@ -18,7 +17,7 @@ rl.question("Enter month: ", function(ans2) {
 
         // Validating if ddm mm === e9
         if (mm > 0 && yy > 0 && mm <= 12) {
-            displayCalendar(mm, yy);
+            getCalendar(mm, yy);
         } else {
             console.log("Invalid Input!\nDate can't be negative!");
             rl.close();
@@ -26,13 +25,18 @@ rl.question("Enter month: ", function(ans2) {
     });
 });
 
-var cal = new Array(6);
-for (var i = 0; i < 6; i++) {
-    cal[i] = new Array(7);
-}
+var day = new q.Queue();
+var date = new q.Queue();
+var weekDay = new q.Queue();
 
-function displayCalendar(m, y) {
-    var limit = 0;
+function getCalendar(m, y) {
+    var dayArr = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
+
+    for (var i = 0; i < dayArr.length; i++) {
+        day.enqueue(dayArr[i]);
+    }
+
+    var limit;
 
     if (m == 4 || m == 6 || m == 9 || m == 11) {
         limit = 30;
@@ -45,38 +49,38 @@ function displayCalendar(m, y) {
         limit = 31;
     }
 
-    var month = ['January', 'February', 'March', 'April', 'May', 'June', 'July',
-        'August', 'September', 'October', 'November', 'December'
-    ];
-    console.log(month[m - 1] + " " + y);
-
-    var day = d.dayOfWeek(1, m, y);
-    var date = 1;
-    console.log("Su Mo Tu We Th Fr Sa");
-
-    for (var i = 0; i < cal.length; i++) {
-
-        for (var j = 0; j < cal[i].length; j++) {
-            if (date > limit) {
-                break;
-            }
-            if (i == 0 && j < day) {
-                cal[i][j] = " ";
-            } else {
-                cal[i][j] = date++;
-            }
-        }
+    for (var i = 1; i <= limit; i++) {
+        date.enqueue(i);
     }
 
-    var str = "";
-    for (var i = 0; i < cal.length; i++) {
-        for (var j = 0; j < cal[i].length; j++) {
-            if (cal[i][j] < 10) {
-                str = str + " " + cal[i][j] + " ";
-            } else if (cal[i][j] == undefined) {
+    weekDay.enqueue(day);
+    var dow = d.dayOfWeek(1, m, y);
+
+    for (var i = 1; i < dayArr.length; i++) {
+        var k = new q.Queue();
+        for (var j = 0; j < dayArr.length; j++) {
+            if (i == 1 && j < dow) {
+                k.enqueue(" ");
+            } else if (!date.isEmpty()) {
+                k.enqueue(date.dequeue());
+            } else {
+                k.enqueue(" ");
+            }
+        }
+        weekDay.enqueue(k);
+    }
+    console.log("");
+
+    var w, str = "";
+    for (var i = 0; i < 7; i++) {
+        w = weekDay.dequeue();
+        for (var r = 0; r < 7; r++) {
+            if (w.peek() < 10) {
+                str = str + " " + w.dequeue() + " ";
+            } else if (w.peek() == null) {
                 str = str + "  ";
             } else {
-                str = str + cal[i][j] + " ";
+                str = str + w.dequeue() + " ";
             }
         }
         console.log(str);
