@@ -1,0 +1,18 @@
+{
+    "inventory": [{
+            "name": "Rice",
+            "weight": 0,
+            "price": 120
+        },
+        {
+            "name": "Pulses",
+            "weight": 0,
+            "price": 120
+        },
+        {
+            "name": "Wheat",
+            "weight": 0,
+            "price": 120
+        }
+    ]
+}

@@ -47,7 +47,7 @@ function searchAndEdit(key) {
      * Using 'fs.readFileSync()' to read file at the given path, and storing 
      * it's String value in 'text' variable using 'toString()' function.
      */
-    var text = fs.readFileSync('/home/bridgelabz/NishPrograms/TextFilesForTest/String.txt').toString();
+    var text = fs.readFileSync('../../TextFilesForTest/String.txt').toString();
 
     // Storing the text in str array by splitting the text by ' ' a space.
     var str = text.split(' ');

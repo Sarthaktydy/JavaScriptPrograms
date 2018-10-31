@@ -26,7 +26,7 @@ rl.question("Enter the String to check for Palindrome: ", function(ans1) {
 });
 
 // Creating a new object of Deque Module.
-var d = new deq.Deque();
+var d = new q.Deque();
 
 /**
  * Function to check if the passed string is a palindrome or not using Deque.

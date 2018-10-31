@@ -65,6 +65,7 @@ function print2DPrimes() {
 /**
  * function to print the 2D array
  */
+
 function show2DArray() {
 
     // taking an empty string to print the column array for each row.
