@@ -156,6 +156,37 @@ class Queue {
             temp = temp.next;
         }
     }
+
+    /**
+     * Function which will return the entire Queue in a String format with a single
+     * space between them.
+     * 
+     * @returns {String}  It returns the string storing whole queue.
+     */
+    getQueue() {
+
+        // Checking if the Queue is empty or not. If yes, return an empty string.
+        if (this.isEmpty()) {
+            return "";
+        }
+
+        // Temporary variable which will run throught the Queue.
+        var temp = this.head;
+        var str = ""; // Initializing an empty string.
+
+        // This loop will run throughout the Queue & concatenate each node's data to 'str'.
+        for (var i = 0; i < this.size; i++) {
+            if (i == this.size - 1) {
+                str = str + temp.data;
+                break;
+            }
+            str = str + temp.data + " ";
+            temp = temp.next;
+        }
+
+        // At last return the string 'str'.
+        return str;
+    }
 }
 
 // function main() {
