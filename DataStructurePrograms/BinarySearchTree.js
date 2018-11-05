@@ -67,7 +67,7 @@ function catalanNumber(n) {
         fact /= (i + 1);
         n1++;
     }
-    return fact;
+    return Math.floor(fact);
 }
 
 /**

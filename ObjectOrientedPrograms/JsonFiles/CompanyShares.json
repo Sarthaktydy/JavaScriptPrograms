@@ -1,0 +1,17 @@
+[{
+        "symbol": "nissan",
+        "noOfShares": 1000
+    },
+    {
+        "symbol": "dodge",
+        "noOfShares": 1000
+    },
+    {
+        "symbol": "honda",
+        "noOfShares": 1000
+    },
+    {
+        "symbol": "suzuki",
+        "noOfShares": 1000
+    }
+]

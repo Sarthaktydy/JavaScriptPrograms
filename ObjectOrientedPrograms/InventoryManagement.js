@@ -55,7 +55,7 @@ function writeInJson(str) {
     var j = JSON.stringify(str);
 
     // Writing 'j' into Inventory.json file.
-    fs.writeFile('./Inventory.json', j, function(err) {
+    fs.writeFile('../JsonFiles/Inventory.json', j, function(err) {
         if (err) {
             throw err;
         } else {
