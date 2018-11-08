@@ -1,12 +1,23 @@
 {
-    "company": [
-
+    "company": [{
+            "name": "Nissan",
+            "symbol": "nis",
+            "price": 456
+        },
         {
-            "name": "3245",
-            "symbol": "243",
-            "price": 243,
-            "uname": "243",
-            "pass": "234"
+            "name": "Dodge",
+            "symbol": "dod",
+            "price": 512
+        },
+        {
+            "name": "Ferrari",
+            "symbol": "fer",
+            "price": 652
+        },
+        {
+            "name": "Bugatti",
+            "symbol": "bug",
+            "price": 1001
         }
     ]
 }

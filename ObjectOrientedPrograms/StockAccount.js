@@ -28,30 +28,19 @@ var q = require('../DataStructurePrograms/Queue');
 
 class CompanyShares {
 
-    constructor(name, symbol, price, uname, pass) {
+    constructor(name, symbol, price) {
         this.name = name;
         this.symbol = symbol;
         this.price = price;
-        this.uname = uname;
-        this.pass = pass;
+        //     this.uname = uname;
+        //     this.pass = pass;
     }
-
-}
-
-class UserShares {
-
-    constructor(name, uname, pass) {
-        this.name = name;
-        this.uname = uname;
-        this.pass = pass;
-    }
-
 }
 
 class StockAccount {
 
-    constructor(fileName) {
-
+    constructor(name) {
+        this.name = name;
     }
 
     valueOf() {
@@ -59,13 +48,53 @@ class StockAccount {
     }
 
     buy(amount, symbol) {
-
-        readFromJson()
-
+        var j = readFromJson('c');
+        var i = 0;
+        for (i = 0; i < j.company.length; i++) {
+            if (j.company[i].symbol == symbol) {
+                break;
+            }
+        }
+        if (j.company[i].symbol == symbol) {
+            var sharesBought = amount / j.company[i].price;
+            var user = {
+                name: this.name,
+                amount: amount,
+                symbol: symbol,
+                bought: sharesBought,
+                time: new Date().toLocaleString()
+            }
+            writeInJson(user, 'u');
+        } else {
+            console.log("Invalid Input! Symbol not matched! Try Again.");
+            purposeUser(this.name);
+        }
     }
 
     sell(amount, symbol) {
-
+        var j = readFromJson('u');
+        var i = 0;
+        for (i = 0; i < j.user.length; i++) {
+            if (j.user[i].name == this.name && j.user[i].symbol == symbol) {
+                break;
+            }
+        }
+        if (i == j.user.length) {
+            console.log("\nINVALID! No such entry found! Please enter again!\n");
+            purposeUser(this.name);
+        } else {
+            if (amount > j.user[i].amount) {
+                console.log("Invalid! Enter amount is greater than you've bought!");
+                purposeUser(this.name);
+            } else {
+                var share = j.user[i].amount / j.user[i].bought;
+                j.user[i].amount -= amount;
+                j.user[i].bought = j.user[i].amount / share;
+                j.user[i].time = new Date().toLocaleString();
+                fs.writeFileSync('./JsonFiles/UserShares.json', JSON.stringify(j));
+                console.log("JSON File Saved!");
+            }
+        }
     }
 
     save(fileName) {
@@ -77,33 +106,41 @@ class StockAccount {
     }
 }
 
+class CompanyAccount {
+
+}
 
 function readFromJson(s) {
-    var j;
-    var data
+    var data;
     if (s == 'c') {
-        data = fs.readFile('./JsonFiles/CompanyShares.json', function(err, data) {
-            if (err) {
-                throw err;
-            } else {
-                console.log(data);
+        data = fs.readFileSync('./JsonFiles/CompanyShares.json');
+        var j = JSON.parse(data);
+        return j;
+        //function(err, data) {
+        //     if (err) {
+        //         throw err;
+        //     } else {
+        //         console.log(data);
 
-                j = JSON.parse(data);
-                console.log(j);
+        //         j = JSON.parse(data);
+        //         console.log(j);
 
-            }
-        });
+        //     }
+        // });
 
     } else {
-        var data = fs.readFile('./JsonFiles/UserShares.json', function(err, data) {
-            if (err) {
-                throw err;
-            } else {
-                j = JSON.parse(data);
-                console.log(j);
-            }
-        });
-        return data;
+        var data = fs.readFileSync('./JsonFiles/UserShares.json')
+        var j = JSON.parse(data);
+        return j;
+        // , function(err, data) {
+        //     if (err) {
+        //         throw err;
+        //     } else {
+        //         j = JSON.parse(data);
+        //         console.log(j);
+        //     }
+        // });
+        // return data;
     }
 
     //return j;
@@ -121,114 +158,112 @@ function writeInJson(str, s) {
     if (s == "c") {
 
         var jsonArr = readFromJson(s);
-        console.log(jsonArr);
-
         jsonArr.company.push(str);
+
         // Writing 'j' into Inventory.json file.
-        fs.writeFile('./JsonFiles/CompanyShares.json', JSON.stringify(jsonArr), function(err) {
-            if (err) {
-                throw err;
-            } else {
-                console.log("JSON File Saved!");
-            }
-        });
+        fs.writeFileSync('./JsonFiles/CompanyShares.json', JSON.stringify(jsonArr));
+        console.log("JSON File Saved!");
+        r.close();
     } else {
         jsonArr = readFromJson(s);
-        jsonArr.push(str);
-        fs.writeFile('./JsonFiles/UserShares.json', JSON.stringify(jsonArr), function(err) {
-            if (err) {
-                throw err;
-            } else {
-                console.log("JSON File Saved!");
-            }
-        });
+        jsonArr.user.push(str);
+        fs.writeFileSync('./JsonFiles/UserShares.json', JSON.stringify(jsonArr));
+        console.log("JSON File Saved!");
+        r.close();
     }
 }
-
-var uname = "";
 
 function registration() {
     r.question("Enter 1 if you're a Company, 2 if you're a Customer: ", function(ans) {
         if (!isNaN(ans.trim())) {
             if (ans.trim() == 1) {
-                r.question("Enter 1. to Log-In or 2. to Sign-Up: ", function(ans1) {
-                    if (!isNaN(ans1)) {
-                        if (Number(ans1.trim()) == 1) {
-                            loginCompany();
-                        } else if (Number(ans1.trim()) == 2) {
-                            registerCompany();
-                        } else {
-                            console.log('Invalid Input!!');
-                            registration();
-                        }
-                    } else {
-                        console.log('Invalid Input!!');
-                        registration();
-                    }
-                });
+                registerCompany();
+                // r.question("Enter 1. to Log-In or 2. to Sign-Up: ", function(ans1) {
+                //     if (!isNaN(ans1)) {
+                //         if (Number(ans1.trim()) == 1) {
+                //             loginCompany();
+                //         } else if (Number(ans1.trim()) == 2) {
+                //             registerCompany();
+                //         } else {
+                //             console.log('Invalid Input!!');
+                //             registration();
+                //         }
+                //     } else {
+                //         console.log('Invalid Input!!');
+                //         registration();
+                //     }
+                // });
             } else if (ans.trim() == 2) {
-                r.question("Enter 1. to Log-In or 2. to Sign-Up: ", function(ans1) {
-                    if (!isNaN(ans1)) {
-                        if (Number(ans1.trim()) == 1) {
-                            loginUser();
-                        } else if (Number(ans1.trim()) == 2) {
-                            registerUser();
-                        } else {
-                            console.log('Invalid Input!!');
-                            registration();
-                        }
-                    } else {
-                        console.log('Invalid Input!!');
-                        registration();
-                    }
-                })
+                registerUser();
+                // r.question("Enter 1. to Log-In or 2. to Sign-Up: ", function(ans1) {
+                //     if (!isNaN(ans1)) {
+                //         if (Number(ans1.trim()) == 1) {
+                //             loginUser();
+                //         } else if (Number(ans1.trim()) == 2) {
+                //             registerUser();
+                //         } else {
+                //             console.log('Invalid Input!!');
+                //             registration();
+                //         }
+                //     } else {
+                //         console.log('Invalid Input!!');
+                //         registration();
+                //     }
+                // })
             } else {
-                console.log('Invalid Input!!');
+                console.log('Invalid Input!! Please enter 1 or 2!');
                 registration();
             }
         } else {
-            console.log('Invalid Input!!');
+            console.log('Invalid Input!! Please enter a number!');
             registration();
         }
     })
 }
 
-function loginCompany() {
-    console.log("--------------------LOGIN---------------------");
-    r.question("Enter username: ", function(ans2) {
-        r.question("Enter password: ", function(ans3) {
-            var uname = ans2.trim();
-            var pass = ans3.trim();
-            if (validateCompany(uname, pass) == 'n') {
-                console.log("LOGIN Succesfull");
-                purposeCompany(validateCompany(uname, pass));
-            } else {
-                console.log("Wrong Credentials! Please try again!");
-                loginCompany();
-            }
-        });
-    });
-}
+// function loginCompany() {
+//     console.log("--------------------LOGIN---------------------");
+//     r.question("Enter username: ", function(ans2) {
+//         r.question("Enter password: ", function(ans3) {
+//             var uname = ans2.trim();
+//             var pass = ans3.trim();
+//             if (validateCompany(uname, pass) == 'n') {
+//                 console.log("LOGIN Succesfull");
+//                 purposeCompany(validateCompany(uname, pass));
+//             } else {
+//                 console.log("Wrong Credentials! Please try again!");
+//                 loginCompany();
+//             }
+//         });
+//     });
+// }
 
-function purposeCompany(name) {
+// function purposeCompany(name) {
+//     r.question("Hello " + name + "! What do you want to do today?" +
+//         "\n1.Change Price Per Share. 2.Change Symbol. 3.Change login Password.",
+//         function(ans1) {
+//             if (!isNaN(ans1)) {
 
-}
+//             }
+//         });
+
+// }
 
 function purposeUser(name) {
-    r.question("Hello " + validateUser() + "! What do you want to do today?" +
-        "\n1.Buy shares 2.Sell Shares 3.Get account details\n",
+    r.question("Hello " + name + "! What do you want to do today?" +
+        "\n1.Buy shares\n2.Sell Shares\n3.Get account details\n",
         function(ans) {
             if (!isNaN(ans)) {
-                var stock = new StockAccount();
-                var c = readFromJson('c');
+                var stock = new StockAccount(name);
+                var c = JSON.stringify(readFromJson('c'));
                 if (Number(ans) == 1) {
                     r.question("Enter symbol of the company whose shares you\'d" +
-                        " like to buy:\n" + c,
+                        " like to buy:\n" + c + "\n",
                         function(ans1) {
                             r.question("Enter the amount: ", function(ans4) {
                                 if (!isNaN(ans4)) {
                                     var sym = ans1.trim();
-                                    var amt = ans4.trim();
+                                    var amt = Number(ans4.trim());
                                     stock.buy(amt, sym);
                                 } else {
                                     console.log("Invalid Input! Please enter again!");
@@ -237,51 +272,65 @@ function purposeUser(name) {
                             });
                         });
                 } else if (Number(ans) == 2) {
-
+                    r.question("Enter symbol of the company whose shares you\'d" +
+                        " like to buy:\n" + c + "\n",
+                        function(ans1) {
+                            r.question("Enter the amount to sell: ", function(ans4) {
+                                if (!isNaN(ans4)) {
+                                    var sym = ans1.trim();
+                                    var amt = Number(ans4.trim());
+                                    stock.sell(amt, sym);
+                                } else {
+                                    console.log("Invalid Input! Please enter again!");
+                                    purposeUser();
+                                }
+                            });
+                        });
                 } else if (Number(ans) == 3) {
-
+                    log("Here's your account details:\n");
+                    stock.valueOf(name);
                 } else {
-
+                    console.log("INVALID INPUT! Please enter again! ");
+                    purposeUser(name);
                 }
             }
         });
 }
 
-function loginUser() {
-    console.log("--------------------LOGIN---------------------");
-    r.question("Enter username: ", function(ans2) {
-        r.question("Enter password: ", function(ans3) {
-            var uname = String(ans2.trim());
-            var pass = String(ans3.trim());
-            if (validateUser(uname, pass) == 'n') {
-                console.log("Login Succesfull");
-                console.log(validateUser(uname, pass));
-                purposeUser(validateUser(uname, pass));
-            } else {
-                console.log("Wrong Credentials! Please try again, or Sign-up!");
-                loginUser();
-            }
-        });
-    });
-}
+// function loginUser() {
+//     console.log("--------------------LOGIN---------------------");
+//     r.question("Enter username: ", function(ans2) {
+//         r.question("Enter password: ", function(ans3) {
+//             var uname = String(ans2.trim());
+//             var pass = String(ans3.trim());
+//             if (validateUser(uname, pass) == 'n') {
+//                 console.log("Login Succesfull");
+//                 purposeUser(validateUser(uname, pass));
+//             } else {
+//                 console.log("Wrong Credentials! Please try again, or Sign-up!");
+//                 loginUser();
+//             }
+//         });
+//     });
+// }
 
 function registerCompany() {
     r.question("Enter your company's full Name: ", function(ans1) {
         r.question("Enter a symbol/nickname for the company: ", function(ans2) {
             r.question("Enter what's your price per share: ", function(ans3) {
                 if (!isNaN(ans3)) {
-                    r.question("Enter a username: ", function(ans4) {
-                        r.question("Enter a password: ", function(ans5) {
-                            var name = ans1.trim();
-                            var symbol = ans2.trim();
-                            var price = Number(ans3.trim());
-                            var uname = ans4.trim();
-                            var pass = ans5.trim();
-                            var t = new CompanyShares(name, symbol, price, uname, pass);
-                            writeInJson(t, "c");
-                            loginCompany();
-                        });
-                    });
+                    // r.question("Enter a username: ", function(ans4) {
+                    //     r.question("Enter a password: ", function(ans5) {
+                    var name = ans1.trim();
+                    var symbol = ans2.trim();
+                    var price = Number(ans3.trim());
+                    // var uname = ans4.trim();
+                    // var pass = ans5.trim();
+                    var t = new CompanyShares(name, symbol, price);
+                    writeInJson(t, "c");
+                    loginCompany();
+                    //     });
+                    // });
                 } else {
                     console.log("Invalid Input!");
                     registerCompany();
@@ -293,50 +342,32 @@ function registerCompany() {
 
 function registerUser() {
     r.question("Enter your full Name: ", function(ans1) {
-        r.question("Enter a username: ", function(ans2) {
-            r.question("Enter a password: ", function(ans3) {
-                var name = ans1.trim();
-                var uname = ans2.trim();
-                var pass = ans3.trim();
-                var t = new UserShares(name, uname, pass);
-                writeInJson(t, 'u');
-                loginUser();
-            });
-        });
+        var name = ans1.trim();
+        purposeUser(name);
     });
 }
 
-function validateCompany(uname, pass) {
-    var f = fs.readFile('./JsonFiles/CompanyShares.json', function(err, data) {
-        if (err) {
-            throw err;
-        } else {
-            var j = JSON.parse(data);
-            for (var i = 0; i < j.length; i++) {
-                if (j[i].uname == uname && j[i].pass == pass) {
-                    return j[i].name;
-                }
-            }
-        }
-    });
-    return 'n';
-}
+// function validateCompany(uname, pass) {
+//     var f = fs.readFileSync('./JsonFiles/CompanyShares.json');
+//     var j = JSON.parse(f);
+//     for (var i = 0; i < j.length; i++) {
+//         if (j[i].uname == uname && j[i].pass == pass) {
+//             return j[i].name;
+//         }
+//     }
+//     return 'n';
+// }
 
-function validateUser(uname, pass) {
-    var f = fs.readFile('./JsonFiles/UserShares.json', function(err, data) {
-        if (err) {
-            throw err;
-        } else {
-            var j = JSON.parse(data);
-            for (var i = 0; i < j.length; i++) {
-                if (j[i].uname == uname && j[i].pass == pass) {
-                    return j[i].name;
-                }
-            }
-        }
-    });
-    return 'n';
-}
+// function validateUser(uname, pass) {
+//     var f = fs.readFileSync('./JsonFiles/UserShares.json');
+//     var j = JSON.parse(f);
+//     for (var i = 0; i < j.length; i++) {
+//         if (j[i].uname == uname && j[i].pass == pass) {
+//             return j[i].name;
+//         }
+//     }
+//     return 'n';
+// }
 
 
 function main() {

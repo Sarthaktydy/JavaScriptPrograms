@@ -1,0 +1,38 @@
+{
+    "user": [{
+            "name": "Akshansh",
+            "amount": 123456,
+            "symbol": "nis",
+            "bought": 270.7368421052632,
+            "time": "11/8/2018, 4:11:23 PM"
+        },
+        {
+            "name": "Sarthak",
+            "amount": 90000,
+            "symbol": "bug",
+            "bought": 89.91008991008991,
+            "time": "11/8/2018, 4:18:50 PM"
+        },
+        {
+            "name": "Chirag",
+            "amount": 140000,
+            "symbol": "dod",
+            "bought": 273.4375,
+            "time": "11/8/2018, 4:19:31 PM"
+        },
+        {
+            "name": "Deepankan",
+            "amount": 145000,
+            "symbol": "bug",
+            "bought": 144.85514485514486,
+            "time": "11/8/2018, 4:20:37 PM"
+        },
+        {
+            "name": "Nishant",
+            "amount": 38000,
+            "symbol": "fer",
+            "bought": 58.282208588957054,
+            "time": "11/8/2018, 6:13:28 PM"
+        }
+    ]
+}
