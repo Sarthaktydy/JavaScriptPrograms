@@ -1,23 +1,53 @@
 {
-    "company": [{
+    "head": {
+        "data": {
             "name": "Nissan",
             "symbol": "nis",
             "price": 456
         },
-        {
-            "name": "Dodge",
-            "symbol": "dod",
-            "price": 512
-        },
-        {
-            "name": "Ferrari",
-            "symbol": "fer",
-            "price": 652
-        },
-        {
-            "name": "Bugatti",
-            "symbol": "bug",
-            "price": 1001
+        "next": {
+            "data": {
+                "name": "Dodge",
+                "symbol": "dod",
+                "price": 512
+            },
+            "next": {
+                "data": {
+                    "name": "Ferrari",
+                    "symbol": "fer",
+                    "price": "674.23"
+                },
+                "next": {
+                    "data": {
+                        "name": "Bugatti",
+                        "symbol": "bug",
+                        "price": 1001
+                    },
+                    "next": {
+                        "data": {
+                            "name": "Xiaomi",
+                            "symbol": "xom",
+                            "price": 430.34
+                        },
+                        "next": {
+                            "data": {
+                                "name": "Puma",
+                                "symbol": "pum",
+                                "price": 456
+                            },
+                            "next": {
+                                "data": {
+                                    "name": "Nike",
+                                    "symbol": "nike",
+                                    "price": 345
+                                },
+                                "next": null
+                            }
+                        }
+                    }
+                }
+            }
         }
-    ]
+    },
+    "size": 7
 }

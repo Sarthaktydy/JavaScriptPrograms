@@ -32,8 +32,6 @@ class CompanyShares {
         this.name = name;
         this.symbol = symbol;
         this.price = price;
-        //     this.uname = uname;
-        //     this.pass = pass;
     }
 }
 
@@ -44,19 +42,29 @@ class StockAccount {
     }
 
     valueOf() {
-
+        var re = readFromJson('u');
+        var sum = 0;
+        for (var i = 0; i < re.user.length; i++) {
+            if (re.user[i].name == this.name) {
+                sum += re.user[i].amount;
+            }
+        }
+        console.log("Total value of the account is: $" + sum);
+        return;
     }
 
     buy(amount, symbol) {
-        var j = readFromJson('c');
+        var com = readFromJson('c');
         var i = 0;
+        var temp = com.head;
         for (i = 0; i < j.company.length; i++) {
-            if (j.company[i].symbol == symbol) {
+            if (temp.data.symbol == symbol) {
                 break;
             }
+            temp = temp.next;
         }
-        if (j.company[i].symbol == symbol) {
-            var sharesBought = amount / j.company[i].price;
+        if (temp.data.symbol == symbol) {
+            var sharesBought = amount / temp.data.price;
             var user = {
                 name: this.name,
                 amount: amount,
@@ -97,17 +105,27 @@ class StockAccount {
         }
     }
 
-    save(fileName) {
-
-    }
-
     printReport() {
-
+        var re = readFromJson('u');
+        var count = 0;
+        for (var i = 0; i < re.user.length; i++) {
+            if (re.user[i].name == this.name) {
+                console.log(re.user[i]);
+                count++;
+            }
+        }
+        if (count == 0) {
+            console.log("No transaction realted to \'" + this.name + "\' exists!");
+            process.exit();
+        }
+        this.valueOf();
+        process.exit();
     }
 }
 
-class CompanyAccount {
-
+function displayCompanies() {
+    var com = readFromJson('c');
+    console.log(com.getList());
 }
 
 function readFromJson(s) {
@@ -115,37 +133,19 @@ function readFromJson(s) {
     if (s == 'c') {
         data = fs.readFileSync('./JsonFiles/CompanyShares.json');
         var j = JSON.parse(data);
-        return j;
-        //function(err, data) {
-        //     if (err) {
-        //         throw err;
-        //     } else {
-        //         console.log(data);
-
-        //         j = JSON.parse(data);
-        //         console.log(j);
-
-        //     }
-        // });
-
+        var l = new ll.LinkedList();
+        var temp = j.head;
+        for (var i = 0; i < j.size; i++) {
+            l.addAppend(temp.data);
+            temp = temp.next;
+        }
+        return l;
     } else {
-        var data = fs.readFileSync('./JsonFiles/UserShares.json')
+        var data = fs.readFileSync('./JsonFiles/UserShares.json');
         var j = JSON.parse(data);
         return j;
-        // , function(err, data) {
-        //     if (err) {
-        //         throw err;
-        //     } else {
-        //         j = JSON.parse(data);
-        //         console.log(j);
-        //     }
-        // });
-        // return data;
     }
-
-    //return j;
 }
-
 
 /**
  * This method helps to convert any object or data passed into
@@ -156,11 +156,11 @@ function readFromJson(s) {
 function writeInJson(str, s) {
 
     if (s == "c") {
-
         var jsonArr = readFromJson(s);
-        jsonArr.company.push(str);
+        jsonArr.addAppend(str);
 
-        // Writing 'j' into Inventory.json file.
+        // jsonArr.company.push(str);
+
         fs.writeFileSync('./JsonFiles/CompanyShares.json', JSON.stringify(jsonArr));
         console.log("JSON File Saved!");
         r.close();
@@ -177,39 +177,16 @@ function registration() {
     r.question("Enter 1 if you're a Company, 2 if you're a Customer: ", function(ans) {
         if (!isNaN(ans.trim())) {
             if (ans.trim() == 1) {
-                registerCompany();
-                // r.question("Enter 1. to Log-In or 2. to Sign-Up: ", function(ans1) {
-                //     if (!isNaN(ans1)) {
-                //         if (Number(ans1.trim()) == 1) {
-                //             loginCompany();
-                //         } else if (Number(ans1.trim()) == 2) {
-                //             registerCompany();
-                //         } else {
-                //             console.log('Invalid Input!!');
-                //             registration();
-                //         }
-                //     } else {
-                //         console.log('Invalid Input!!');
-                //         registration();
-                //     }
-                // });
+                r.question("Enter 1 if you're new, or 2 if you're existing: ", function(ans1) {
+                    if (ans1.trim() == 1) {
+                        registerCompany();
+                    } else {
+                        purposeCompany();
+                    }
+                });
             } else if (ans.trim() == 2) {
                 registerUser();
-                // r.question("Enter 1. to Log-In or 2. to Sign-Up: ", function(ans1) {
-                //     if (!isNaN(ans1)) {
-                //         if (Number(ans1.trim()) == 1) {
-                //             loginUser();
-                //         } else if (Number(ans1.trim()) == 2) {
-                //             registerUser();
-                //         } else {
-                //             console.log('Invalid Input!!');
-                //             registration();
-                //         }
-                //     } else {
-                //         console.log('Invalid Input!!');
-                //         registration();
-                //     }
-                // })
+
             } else {
                 console.log('Invalid Input!! Please enter 1 or 2!');
                 registration();
@@ -221,33 +198,72 @@ function registration() {
     })
 }
 
-// function loginCompany() {
-//     console.log("--------------------LOGIN---------------------");
-//     r.question("Enter username: ", function(ans2) {
-//         r.question("Enter password: ", function(ans3) {
-//             var uname = ans2.trim();
-//             var pass = ans3.trim();
-//             if (validateCompany(uname, pass) == 'n') {
-//                 console.log("LOGIN Succesfull");
-//                 purposeCompany(validateCompany(uname, pass));
-//             } else {
-//                 console.log("Wrong Credentials! Please try again!");
-//                 loginCompany();
-//             }
-//         });
-//     });
-// }
+function companyExists(name) {
+    var com = readFromJson('c');
+    var temp = com.head;
+    for (var i = 0; i < com.size; i++) {
+        if (temp.data.name == name) {
+            return true;
+        }
+        temp = temp.next;
+    }
+    return false;
+}
 
-// function purposeCompany(name) {
-//     r.question("Hello " + name + "! What do you want to do today?" +
-//         "\n1.Change Price Per Share. 2.Change Symbol. 3.Change login Password.",
-//         function(ans1) {
-//             if (!isNaN(ans1)) {
-
-//             }
-//         });
-
-// }
+function purposeCompany() {
+    r.question("Enter your Company name: ", function(ans1) {
+        if (!companyExists(ans1.trim())) {
+            console.log("INVALID! No such Company exists in our database! Try to register.");
+            registration();
+            c
+        } else {
+            r.question("Hello " + ans1.trim() + "! What would you like to do today?\n" +
+                "1.Change Symbol\n2.Change Price Per share\n",
+                function(ans2) {
+                    if (!isNaN(ans2.trim())) {
+                        var p = Number(ans2.trim());
+                        var com = readFromJson('c');
+                        var temp = com.head;
+                        var i = 0;
+                        for (i = 0; i < com.size; i++) {
+                            if (temp.data.name == ans1.trim()) {
+                                break;
+                            }
+                            temp = temp.next;
+                        }
+                        if (p == 1) {
+                            console.log("Your previous symbol was: " + temp.data.symbol);
+                            r.question("What would you like to change it to? ",
+                                function(ans3) {
+                                    temp.data.symbol = ans3.trim();
+                                    fs.writeFileSync('./JsonFiles/CompanyShares.json', JSON.stringify(com));
+                                    console.log("Succesfully Changed!");
+                                    process.exit();
+                                });
+                        } else {
+                            console.log("Your previous price per share was: " +
+                                temp.data.price);
+                            r.question("What would you like to change it to? ",
+                                function(ans3) {
+                                    if (!isNaN(ans3.trim())) {
+                                        temp.data.price = ans3.trim();
+                                        fs.writeFileSync('./JsonFiles/CompanyShares.json', JSON.stringify(com));
+                                        console.log("Succesfully Changed!");
+                                        process.exit();
+                                    } else {
+                                        console.log("INVALID! Price should be a number!");
+                                        purposeCompany();
+                                    }
+                                });
+                        }
+                    } else {
+                        console.log("Invalid Input! Please enter again!");
+                        purposeCompany();
+                    }
+                });
+        }
+    });
+}
 
 function purposeUser(name) {
     r.question("Hello " + name + "! What do you want to do today?" +
@@ -258,7 +274,7 @@ function purposeUser(name) {
                 var c = JSON.stringify(readFromJson('c'));
                 if (Number(ans) == 1) {
                     r.question("Enter symbol of the company whose shares you\'d" +
-                        " like to buy:\n" + c + "\n",
+                        " like to buy:\n" + displayCompanies() + "\n",
                         function(ans1) {
                             r.question("Enter the amount: ", function(ans4) {
                                 if (!isNaN(ans4)) {
@@ -273,7 +289,7 @@ function purposeUser(name) {
                         });
                 } else if (Number(ans) == 2) {
                     r.question("Enter symbol of the company whose shares you\'d" +
-                        " like to buy:\n" + c + "\n",
+                        " like to buy:\n" + displayCompanies() + "\n",
                         function(ans1) {
                             r.question("Enter the amount to sell: ", function(ans4) {
                                 if (!isNaN(ans4)) {
@@ -287,8 +303,7 @@ function purposeUser(name) {
                             });
                         });
                 } else if (Number(ans) == 3) {
-                    log("Here's your account details:\n");
-                    stock.valueOf(name);
+                    stock.printReport();
                 } else {
                     console.log("INVALID INPUT! Please enter again! ");
                     purposeUser(name);
@@ -297,40 +312,16 @@ function purposeUser(name) {
         });
 }
 
-// function loginUser() {
-//     console.log("--------------------LOGIN---------------------");
-//     r.question("Enter username: ", function(ans2) {
-//         r.question("Enter password: ", function(ans3) {
-//             var uname = String(ans2.trim());
-//             var pass = String(ans3.trim());
-//             if (validateUser(uname, pass) == 'n') {
-//                 console.log("Login Succesfull");
-//                 purposeUser(validateUser(uname, pass));
-//             } else {
-//                 console.log("Wrong Credentials! Please try again, or Sign-up!");
-//                 loginUser();
-//             }
-//         });
-//     });
-// }
-
 function registerCompany() {
     r.question("Enter your company's full Name: ", function(ans1) {
         r.question("Enter a symbol/nickname for the company: ", function(ans2) {
             r.question("Enter what's your price per share: ", function(ans3) {
                 if (!isNaN(ans3)) {
-                    // r.question("Enter a username: ", function(ans4) {
-                    //     r.question("Enter a password: ", function(ans5) {
                     var name = ans1.trim();
                     var symbol = ans2.trim();
                     var price = Number(ans3.trim());
-                    // var uname = ans4.trim();
-                    // var pass = ans5.trim();
                     var t = new CompanyShares(name, symbol, price);
                     writeInJson(t, "c");
-                    loginCompany();
-                    //     });
-                    // });
                 } else {
                     console.log("Invalid Input!");
                     registerCompany();
@@ -345,33 +336,6 @@ function registerUser() {
         var name = ans1.trim();
         purposeUser(name);
     });
-}
-
-// function validateCompany(uname, pass) {
-//     var f = fs.readFileSync('./JsonFiles/CompanyShares.json');
-//     var j = JSON.parse(f);
-//     for (var i = 0; i < j.length; i++) {
-//         if (j[i].uname == uname && j[i].pass == pass) {
-//             return j[i].name;
-//         }
-//     }
-//     return 'n';
-// }
-
-// function validateUser(uname, pass) {
-//     var f = fs.readFileSync('./JsonFiles/UserShares.json');
-//     var j = JSON.parse(f);
-//     for (var i = 0; i < j.length; i++) {
-//         if (j[i].uname == uname && j[i].pass == pass) {
-//             return j[i].name;
-//         }
-//     }
-//     return 'n';
-// }
-
-
-function main() {
-
 }
 
 registration();
