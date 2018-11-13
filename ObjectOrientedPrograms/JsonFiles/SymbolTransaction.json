@@ -1,0 +1,31 @@
+{
+    "head": {
+        "data": "nis",
+        "next": {
+            "data": "bug",
+            "next": {
+                "data": "dod",
+                "next": {
+                    "data": "bug",
+                    "next": {
+                        "data": "fer",
+                        "next": {
+                            "data": "bug",
+                            "next": {
+                                "data": "tt",
+                                "next": {
+                                    "data": "xom",
+                                    "next": {
+                                        "data": "tt",
+                                        "next": null
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "size": 9
+}

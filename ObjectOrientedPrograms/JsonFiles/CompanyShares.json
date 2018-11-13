@@ -15,7 +15,7 @@
                 "data": {
                     "name": "Ferrari",
                     "symbol": "fer",
-                    "price": "674.23"
+                    "price": 674.23
                 },
                 "next": {
                     "data": {
@@ -41,7 +41,14 @@
                                     "symbol": "nike",
                                     "price": 345
                                 },
-                                "next": null
+                                "next": {
+                                    "data": {
+                                        "name": "Tata",
+                                        "symbol": "tt",
+                                        "price": 432.34
+                                    },
+                                    "next": null
+                                }
                             }
                         }
                     }
@@ -49,5 +56,5 @@
             }
         }
     },
-    "size": 7
+    "size": 8
 }
