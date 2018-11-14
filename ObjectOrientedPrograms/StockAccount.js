@@ -1,9 +1,9 @@
 /******************************************************************************
  *  Compilation:  node StockAccount.js
  *  
- *  Purpose:  Program to read in Stock Names, Number of Share, Share Price. 
- *            Showing a Stock Report with total value of each Stock and the total 
- *            value of Stock.
+ *  Purpose:  Program to keep track of different Companies, their price per
+ *            share & User Account to keep track of shares bought or sold.
+ *            Implementation of Linked List, Stack & Queue is also used.
  *
  *  @author  Nishant Kumar
  *  @version 1.0
@@ -365,7 +365,7 @@ function writeInJson(str, s) {
         // If String is 's', add the data & write it in the file.
         else if (s == 's') {
             jsonArr.push(str);
-            fs.writeFileSync('./JsonFiles/SymbolTransaction.json', JSON.stringify(jsonArr));
+            fs.writeFileSync('./JsonFiles/SymbolTransaction .json', JSON.stringify(jsonArr));
         }
 
         // If String is 't', add the data & write it in the file.
@@ -393,89 +393,169 @@ function writeInJson(str, s) {
     }
 }
 
+/**
+ * Function to start the program & register User/Company.
+ */
 function registration() {
 
+    // Asking the user if he's a Company/Customer.
     r.question("Enter 1 if you're a Company, 2 if you're a Customer: ", function(ans) {
+
         if (!isNaN(ans.trim())) {
+
+            // If user entered 1, then it's a company
             if (ans.trim() == 1) {
+
+                // Asking if he's new or existing.
                 r.question("Enter 1 if you're new, or 2 if you're existing: ", function(ans1) {
+
+                    // If 1, then register the company.
                     if (ans1.trim() == 1) {
                         registerCompany();
-                    } else {
+                    }
+
+                    // Else existing, so ask for his purpose.
+                    else {
                         purposeCompany();
                     }
                 });
-            } else if (ans.trim() == 2) {
+            }
+
+            // If user entered 2, then it's a Customer, so register him.
+            else if (ans.trim() == 2) {
                 registerUser();
 
-            } else {
+            }
+
+            // Else Invalid input.
+            else {
                 console.log('Invalid Input!! Please enter 1 or 2!');
                 registration();
             }
-        } else {
+        }
+
+        // Else Invalid input.
+        else {
             console.log('Invalid Input!! Please enter a number!');
             registration();
         }
     })
 }
 
+/**
+ * Function to check if the company exists in the database or not.
+ * 
+ * @param {String} name  It is the company name to be searched.
+ * 
+ * @returns {Boolean}  It returns true/false based on company found or not.
+ */
 function companyExists(name) {
+
+    // Taking Company data
     var com = readFromJson('c');
     var temp = com.head;
+
+    // For loop to run till the end of the Company list to find the company.
     for (var i = 0; i < com.size; i++) {
+
+        // If the name is found, then return true.
         if (temp.data.name == name) {
             return true;
         }
         temp = temp.next;
     }
+
+    // If not found, then return false.
     return false;
 }
 
+
+/**
+ * Function to check the purpose of the company.
+ */
 function purposeCompany() {
+
+    // Asking company to enter it's name.
     r.question("Enter your Company name: ", function(ans1) {
+
+        // If company does't exist, go for registration again!
         if (!companyExists(ans1.trim())) {
             console.log("INVALID! No such Company exists in our database! Try to register.");
             registration();
-        } else {
+        }
+
+        // If the company exists, Ask for his purpose.
+        else {
+
+            // Asking the user to enter his purpose.
             r.question("Hello " + ans1.trim() + "! What would you like to do today?\n" +
                 "1.Change Symbol\n2.Change Price Per share\n",
                 function(ans2) {
+
                     if (!isNaN(ans2.trim())) {
+
+                        // Storing the answer in p
                         var p = Number(ans2.trim());
+
+                        // Reading Company file.
                         var com = readFromJson('c');
                         var temp = com.head;
                         var i = 0;
+
+                        // For loop to run till it finds the company
                         for (i = 0; i < com.size; i++) {
+
+                            // When company name is found, break the loop.
                             if (temp.data.name == ans1.trim()) {
                                 break;
                             }
                             temp = temp.next;
                         }
+
+                        // If input is 1, Change Symbol
                         if (p == 1) {
+
+                            // Printing it's previous symbol & asking to enter new one.
                             console.log("Your previous symbol was: " + temp.data.symbol);
                             r.question("What would you like to change it to? ",
                                 function(ans3) {
+
+                                    // Overwriting the symbol with new one.
                                     temp.data.symbol = ans3.trim();
+
+                                    // Writing the data in file.
                                     fs.writeFileSync('./JsonFiles/CompanyShares.json', JSON.stringify(com));
                                     console.log("Succesfully Changed!");
                                     process.exit();
                                 });
-                        } else {
+                        }
+
+                        // If input is 2, Change price per share.
+                        else {
+
+                            // Printing it's previous price & asking to enter new one.
                             console.log("Your previous price per share was: " +
                                 temp.data.price);
                             r.question("What would you like to change it to? ",
                                 function(ans3) {
+
                                     if (!isNaN(ans3.trim())) {
+
+                                        // Overwriting the price with new one.
                                         temp.data.price = ans3.trim();
+
+                                        // Write the data in file.
                                         fs.writeFileSync('./JsonFiles/CompanyShares.json', JSON.stringify(com));
                                         console.log("Succesfully Changed!");
                                         process.exit();
+
                                     } else {
                                         console.log("INVALID! Price should be a number!");
                                         purposeCompany();
                                     }
                                 });
                         }
+
                     } else {
                         console.log("Invalid Input! Please enter again!");
                         purposeCompany();
@@ -485,62 +565,117 @@ function purposeCompany() {
     });
 }
 
+/**
+ * Function to check the purpose of the user.
+ * 
+ * @param {String} name  It is the name of the customer.
+ */
 function purposeUser(name) {
+
+    // Asking the user about it's purpose.
     r.question("Hello " + name + "! What do you want to do today?" +
         "\n1.Buy shares\n2.Sell Shares\n3.Get account details\n",
         function(ans) {
+
+            // Checking if it's a number or not.
             if (!isNaN(ans)) {
+
+                // Creating a new object of StockAccount passing the name.
                 var stock = new StockAccount(name);
-                var c = JSON.stringify(readFromJson('c'));
+
+                // If user entered 1, Buy shares.
                 if (Number(ans) == 1) {
+
+                    // Asking user to enter the symbol of company.
                     r.question("Enter symbol of the company whose shares you\'d" +
                         " like to buy:\n" + displayCompanies() + "\n",
                         function(ans1) {
+
+                            // Asking user to enter amount of shares to be bought.
                             r.question("Enter the amount: ", function(ans4) {
+
                                 if (!isNaN(ans4)) {
+
                                     var sym = ans1.trim();
                                     var amt = Number(ans4.trim());
+
+                                    // Calling buy() function to buy 'amt' shares of 'sym'.
                                     stock.buy(amt, sym);
+
                                 } else {
                                     console.log("Invalid Input! Please enter again!");
                                     purposeUser();
                                 }
                             });
                         });
-                } else if (Number(ans) == 2) {
+                }
+
+                // If user entered 2, Sell shares.
+                else if (Number(ans) == 2) {
+
+                    // Asking the user to enter the company symbol who he'll sell.
                     r.question("Enter symbol of the company whose shares you\'d" +
                         " like to sell:\n" + displayCompanies() + "\n",
-                        function(ans1) {
+                        function a(ans1) {
+
+                            // Asking the user amount to sell.
                             r.question("Enter the amount to sell: ", function(ans4) {
+
                                 if (!isNaN(ans4)) {
+
                                     var sym = ans1.trim();
                                     var amt = Number(ans4.trim());
+
+                                    // Calling Sell() method to sell 'amt' shares of 'sym'.
                                     stock.sell(amt, sym);
+
                                 } else {
                                     console.log("Invalid Input! Please enter again!");
                                     purposeUser();
                                 }
                             });
                         });
-                } else if (Number(ans) == 3) {
+                }
+
+                // If user entered 3, Print the report.
+                else if (Number(ans) == 3) {
+
+                    // Calling printReport() function to print report of 'name' person's account.
                     stock.printReport();
                 } else {
                     console.log("INVALID INPUT! Please enter again! ");
                     purposeUser(name);
                 }
+            } else {
+                console.log("INVALID INPUT! Please enter again! ");
+                purposeUser(name);
             }
         });
 }
 
+/**
+ * Function to register a new company.
+ */
 function registerCompany() {
+
+    // Asking the company's full name, a symbol, and price per share.
     r.question("Enter your company's full Name: ", function(ans1) {
+
         r.question("Enter a symbol/nickname for the company: ", function(ans2) {
+
             r.question("Enter what's your price per share: ", function(ans3) {
+
                 if (!isNaN(ans3)) {
+
+                    // Storing inputs in name, symbol & price variables.
                     var name = ans1.trim();
                     var symbol = ans2.trim();
                     var price = Number(ans3.trim());
+
+                    // Creating an object of CompanyShares to store name, symbol & price.
                     var t = new CompanyShares(name, symbol, price);
+
+                    // Passing that object in writeFileSync() function to store it into file.
                     writeInJson(t, "c");
                 } else {
                     console.log("Invalid Input!");
@@ -551,11 +686,19 @@ function registerCompany() {
     });
 }
 
+/**
+ * Function to register a user.
+ */
 function registerUser() {
+
+    // Asking the user it's full name.
     r.question("Enter your full Name: ", function(ans1) {
         var name = ans1.trim();
+
+        // Calling purposeUser() function to find the user's purpose.
         purposeUser(name);
     });
 }
 
+// Calling registration() function to start the program.
 registration();
