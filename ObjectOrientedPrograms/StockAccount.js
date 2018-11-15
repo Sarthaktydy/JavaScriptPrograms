@@ -14,7 +14,7 @@
 // Implementing the File System module in this application.
 var fs = require("fs");
 
-// Implementing the Readline module in this application.
+// Implementing the Readline Module in this application.
 var rl = require('readline');
 
 // Creating an Interface object of Readline Module by passing 'stdin' & 'stdout' as parameters.

@@ -1,15 +1,11 @@
 {
     "address": [{
-            "firstName": "Nishant",
-            "lastName": "Kumar",
-            "address": "803, BridgeLabz, Sai Samarth, Deonar Main Road, Govandi East",
-            "city": "Mumbai",
-            "state": "Maharashtra",
-            "zip": 400088,
-            "phone": 9876543210
-        },
-        {
-
-        }
-    ]
+        "firstName": "Nishant",
+        "lastName": "Kumar",
+        "address": "803, BridgeLabz, Sai Samarth, Deonar Main Road, Govandi East",
+        "city": "Mumbai",
+        "state": "Maharashtra",
+        "zip": "400088",
+        "phone": "7908522464"
+    }]
 }
