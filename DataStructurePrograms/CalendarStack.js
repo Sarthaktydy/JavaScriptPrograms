@@ -79,6 +79,7 @@ function getCalendar(m, y) {
         }
         weekDay.push(k);
     }
+
     console.log("");
 
     var w, v, str = "";
