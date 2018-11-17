@@ -3,52 +3,57 @@
             "name": "Nishant Kumar",
             "id": "1",
             "special": "Cardiologist",
-            "count": "5",
             "appointments": {
-                "16/11/2018": []
+                "test": [""]
             }
         },
         {
             "name": "Deepankan Tiwari",
             "id": "2",
             "special": "Gyanecologist",
-            "count": "5",
-            "appointments": []
+            "appointments": {
+                "test": [""]
+            }
         },
         {
             "name": "Akshansh Verma",
             "id": "3",
             "special": "Dentist",
-            "count": "5",
-            "appointments": []
+            "appointments": {
+                "test": [""]
+            }
         },
         {
             "name": "Sarthak Solanki",
             "id": "4",
             "special": "Orthopedic",
-            "count": "5",
-            "appointments": []
+            "appointments": {
+                "test": [""]
+            }
         },
         {
             "name": "Chiraag Katare",
             "id": "5",
             "special": "Vetneary",
-            "count": "5",
-            "appointments": []
+            "appointments": {
+                "test": [""]
+            }
         },
         {
             "name": "Prashant Kumar Jha",
             "id": "6",
             "special": "Pediatrician",
-            "count": "5",
-            "appointments": []
+            "appointments": {
+                "test": [""]
+            }
         },
         {
             "name": "Abhishek Kumar",
             "id": "7",
             "special": "Dentist",
-            "count": "5",
-            "appointments": []
+            "appointments": {
+                "test": [""]
+            }
         }
     ]
 }

@@ -67,13 +67,10 @@ function updatePatient(data) {
 
     fs.writeFileSync('./JsonFiles/Patients.json', JSON.stringify(data));
 
-    console.log("JSON File Saved!");
-
-    r.close();
 }
 
 function takeInput() {
-    r.question("Choose 1. Patient\n2. User\n", function(ans1) {
+    r.question("Are you a\n1. Patient or\n2. User\n", function(ans1) {
         if (ans1.trim() == 1) {
             registerPatient();
         } else {
@@ -85,7 +82,7 @@ function takeInput() {
 function displayDoctors() {
     var d = readFromJson('doc');
     for (var i = 0; i < d.doctors.length; i++) {
-        console.log(d.doctors[i][name] + " " + d.doctors[i][name] + " " + d.doctors[i][name]);
+        console.log(d.doctors[i].id + ". " + d.doctors[i].name + " " + d.doctors[i].special);
     }
 }
 
@@ -102,45 +99,68 @@ function registerPatient() {
                     id: size,
                     phone: ans2.trim(),
                     age: ans3.trim(),
+                    doc: ""
                 }
 
                 d.patients.push(patient);
                 d.size++;
                 updatePatient(d);
-                chooseDoctor(patient.id);
+                chooseDoctor(size);
             });
         });
     });
 }
 
-function chooseDoctor(id) {
+function chooseDoctor(pId) {
 
-    r.question(displayDoctors() + "Choose one by ID: ", function(ans1) {
-        var nm = getDoctorName(ans1.trim());
-        r.question("Choose a date to visit Dr. " + nm, function(ans2) {
-            if (isDocAvailable(id, ans2)) {
-                r.question("Choose a time:", function(ans3) {
+    displayDoctors();
 
+    r.question("Choose your Doctor by ID: ", (ans1) => {
+        r.question("Choose a date to visit him (DD/MM/YY): ", function(ans2) {
+            if (isDocAvailable(ans1.trim(), ans2.trim())) {
+                r.question("Doctor is Avaialble, Book an Appointment? ", function(ans3) {
+                    var dName = getDoctorName(ans1.trim());
+                    if (ans3.trim().startsWith('y')) {
+                        bookAppointment(pId, ans1.trim(), dName, ans2.trim());
+                    } else {
+                        console.log("Thank you for visiting!");
+                        r.close();
+                    }
                 });
             } else {
-
+                r.close();
             }
         });
     });
 }
 
+function bookAppointment(pId, dId, dName, date) {
+    var doc = readFromJson('doc');
+    var pat = readFromJson('pat');
+    if (!doc.doctors[dId - 1].appointments.test.includes(date)) {
+        doc.doctors[dId - 1].appointments[date] = [];
+    }
+    pat.patients[pId - 1];
+    doc.doctors[dId - 1].appointments[date].push(pId);
+    doc.doctors[dId - 1].appointments.test.push(date);
+    //pat.patients[pId - 1].doc = "Dr. " + dName + " on " + date;
+
+}
+
 function getDoctorName(id) {
     var d = readFromJson('doc');
-    return d.doctors[id - 1][name];
+    return d.doctors[id - 1].name;
 }
 
 function isDocAvailable(id, date) {
     var d = readFromJson('doc');
-    if (d.doctors[d - 1][appointments] == null) {
+    if (!d.doctors[id - 1].appointments.test.includes(date)) {
         return true;
-    } else if (d.doctors[d - 1][appointments][date].length <= 5) {
+    } else if (d.doctors[id - 1].appointments[date].length <= 5) {
         return true;
     } else {
         return false;
     }
 }
+
+takeInput();
